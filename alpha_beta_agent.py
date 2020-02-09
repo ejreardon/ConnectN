@@ -25,7 +25,16 @@ class AlphaBetaAgent(agent.Agent):
     # NOTE: make sure the column is legal, or you'll lose the game.
     def go(self, brd):
         """Search for the best move (choice of column for the token)"""
-        # Your code here
+        # - Use get-successors to find the successive board states
+            # - If the list of board states returned is empty or acq state, cut off there
+        # - Use a heuristic function to evaluate the successor nodes
+        # - Implement max() and min() functions (representing you and your adversary) to determine
+        #   which move to make
+            # - Keep on working up the tree alternating max and min function until you come to terminating
+            #   state or reach the depth
+        # - Find out what orignal successive state it branches off of and use that to determine where to place token
+
+
 
     # Get the successors of the given board.
     #
