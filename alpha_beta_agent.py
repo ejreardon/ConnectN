@@ -26,11 +26,23 @@ class AlphaBetaAgent(agent.Agent):
     def go(self, brd):
         """Search for the best move (choice of column for the token)"""
         # Use get-successors to find the set of successive board states for the next move
-        nextMove_list = self.get_successors(brd)
+        next_move_list = self.get_successors(brd)
+        # Initialize a dictionary to track board states their values to find max values and their assoc states tuples
+        values_dict = {}
+        # Int to hold the max_value found (init to negative infinity)
+        max_found = float("-inf")
         # Iterate through the possible board states (tuple of board and index of new token) in the nextMove_list
-        for state in nextMove_list:
-            # Check if the max or min is found based on the turn number (even is Max, odd is Min)
-            state[0]
+        for state in next_move_list:
+            # Begin find_min function with the new max and depth of 1 on the successors of the current initial state
+            min_found = self.find_min(self.get_successors(state[0]), max_found, 1)
+            # Update the dict with the min value found and the state tuple
+            values_dict.update({min_found : state})
+            # Check for new max and replace if possible
+            if min_found > max_found:
+                max_found = min_found
+        # Once all values are found, find max_found in the dict and get the tuple to return the move needed to be made
+        return (values_dict[max_found])[0]
+
         # - Use get-successors to find the successive board states
             # - If the list of board states returned is empty or acq state, cut off there
         # - Use a heuristic function to evaluate the successor nodes
