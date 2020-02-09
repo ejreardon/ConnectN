@@ -25,6 +25,12 @@ class AlphaBetaAgent(agent.Agent):
     # NOTE: make sure the column is legal, or you'll lose the game.
     def go(self, brd):
         """Search for the best move (choice of column for the token)"""
+        # Use get-successors to find the set of successive board states for the next move
+        nextMove_list = self.get_successors(brd)
+        # Iterate through the possible board states (tuple of board and index of new token) in the nextMove_list
+        for state in nextMove_list:
+            # Check if the max or min is found based on the turn number (even is Max, odd is Min)
+            state[0]
         # - Use get-successors to find the successive board states
             # - If the list of board states returned is empty or acq state, cut off there
         # - Use a heuristic function to evaluate the successor nodes
@@ -34,6 +40,29 @@ class AlphaBetaAgent(agent.Agent):
             #   state or reach the depth
         # - Find out what orignal successive state it branches off of and use that to determine where to place token
 
+    # Find the board state that returns the highest value
+    #
+    # PARAM [list of board.Board]: The list of successive board states
+    # PARAM [int]: The current maximum value found, used for Alpha-Beta Pruning
+    # PARAM [int]: The current depth of the nodes
+    # RETURN [list of (board.Board, int)]: a list of the successor boards,
+    #                                      along with the column where the last
+    #
+    def find_max(self, states, max_val, curr_depth):
+        # TODO
+        return 1
+
+    # Find the board state that returns the lowest value
+    #
+    # PARAM [list of board.Board]: The list of successive board states
+    # PARAM [int]: The current maximum value found, used for Alpha-Beta Pruning
+    # PARAM [int]: The current depth of the nodes
+    # RETURN [list of (board.Board, int)]: a list of the successor boards,
+    #                                      along with the column where the last
+    #
+    def find_min(self, states, max_val, curr_depth):
+        # TODO
+        return 1
 
 
     # Get the successors of the given board.
