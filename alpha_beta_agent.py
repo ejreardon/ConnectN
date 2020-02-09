@@ -43,7 +43,6 @@ class AlphaBetaAgent(agent.Agent):
         # Once all values are found, find max_found in the dict and get the tuple to return the move needed to be made
         return (values_dict[max_found])[0]
 
-        # - Use get-successors to find the successive board states
             # - If the list of board states returned is empty or acq state, cut off there
         # - Use a heuristic function to evaluate the successor nodes
         # - Implement max() and min() functions (representing you and your adversary) to determine
