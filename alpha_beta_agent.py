@@ -45,8 +45,7 @@ class AlphaBetaAgent(agent.Agent):
     # PARAM [list of board.Board]: The list of successive board states
     # PARAM [int]: The current maximum value found, used for Alpha-Beta Pruning
     # PARAM [int]: The current depth of the nodes
-    # RETURN [list of (board.Board, int)]: a list of the successor boards,
-    #                                      along with the column where the last
+    # RETURN [int]: Maximum value found
     #
     def find_max(self, states, max_val, curr_depth):
         # TODO
@@ -57,8 +56,7 @@ class AlphaBetaAgent(agent.Agent):
     # PARAM [list of board.Board]: The list of successive board states
     # PARAM [int]: The current maximum value found, used for Alpha-Beta Pruning
     # PARAM [int]: The current depth of the nodes
-    # RETURN [list of (board.Board, int)]: a list of the successor boards,
-    #                                      along with the column where the last
+    # RETURN [int]: Minimum value found
     #
     def find_min(self, states, max_val, curr_depth):
         # TODO
