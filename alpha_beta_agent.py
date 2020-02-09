@@ -43,14 +43,6 @@ class AlphaBetaAgent(agent.Agent):
         # Once all values are found, find max_found in the dict and get the tuple to return the move needed to be made
         return (values_dict[max_found])[0]
 
-            # - If the list of board states returned is empty or acq state, cut off there
-        # - Use a heuristic function to evaluate the successor nodes
-        # - Implement max() and min() functions (representing you and your adversary) to determine
-        #   which move to make
-            # - Keep on working up the tree alternating max and min function until you come to terminating
-            #   state or reach the depth
-        # - Find out what orignal successive state it branches off of and use that to determine where to place token
-
     # Find the board state that returns the highest value
     #
     # PARAM [list of board.Board]: The list of successive board states
@@ -59,8 +51,22 @@ class AlphaBetaAgent(agent.Agent):
     # RETURN [int]: Maximum value found
     #
     def find_max(self, states, max_val, curr_depth):
-        # TODO
-        return 1
+        # Check to see if no states are returned
+        # TODO: Figure out what to do
+        # Check to see if the current depth is the maximum depth
+        if curr_depth == self.max_depth:
+            # TODO ADD: Perform heuristics on the states and return the max
+            print("Reached max depth")
+            max_state_value = 100000
+        else:
+            # Init max state value to negative infinity
+            max_state_value = float("-inf")
+            # Iterate through the successive states and find the min for each, increment the depth
+            for state in states:
+                curr_value = self.find_min(state, max_val, curr_depth + 1)
+                if curr_value > max_state_value:
+                    max_state_value = curr_value
+        return max_state_value
 
     # Find the board state that returns the lowest value
     #
@@ -70,8 +76,22 @@ class AlphaBetaAgent(agent.Agent):
     # RETURN [int]: Minimum value found
     #
     def find_min(self, states, max_val, curr_depth):
-        # TODO
-        return 1
+        # Check to see if no states are returned
+        # TODO: Figure out what to do
+        # Check to see if the current depth is the maximum depth
+        if curr_depth == self.max_depth:
+            # TODO ADD: Perform heuristics on the states and return the max
+            print("Reached max depth")
+            min_state_value = 100000
+        else:
+            # Init min state value to positive infinity
+            min_state_value = float("inf")
+            # Iterate through the successive states and find the max for each, increment the depth
+            for state in states:
+                curr_value = self.find_max(state, max_val, curr_depth + 1)
+                if curr_value < min_state_value:
+                    min_state_value = curr_value
+        return min_state_value
 
 
     # Get the successors of the given board.
