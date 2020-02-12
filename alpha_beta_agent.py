@@ -154,32 +154,36 @@ class AlphaBetaAgent(agent.Agent):
     # RETURN [int]: board state value
     #
     def heuristic(self, brd):
+        # variable to hold score return value
         total_score = 0
+        # get an array a of available moves for each column
+        moves = self.validMoves(brd)
+        # iterate through every column
         for col in range(len(brd.w)):
-            for row in range(len(brd.h)):
-                # TODO ADD: Set variable to vertical heuristic function
-                vertical_score = self.verticalHeuristic(row, col, brd)
-                if vertical_score == (10 ** (brd.n-1)) or vertical_score == -(10 ** (brd.n-1)):
-                    return vertical_score
-                total_score += vertical_score
+            row = moves[col]
+            # TODO ADD: Set variable to vertical heuristic function
+            vertical_score = self.verticalHeuristic(row, col, brd)
+            if vertical_score == (10 ** (brd.n-1)) or vertical_score == -(10 ** (brd.n-1)):
+                return vertical_score
+            total_score += vertical_score
 
-                # TODO ADD: Set variable to horizontal heuristic function
-                horizontal_score = self.horizontalHeuristic(row, col, brd)
-                if horizontal_score == (10 ** (brd.n-1)) or horizontal_score == -(10 ** (brd.n-1)):
-                    return horizontal_score
-                total_score += horizontal_score
+            # TODO ADD: Set variable to horizontal heuristic function
+            horizontal_score = self.horizontalHeuristic(row, col, brd)
+            if horizontal_score == (10 ** (brd.n-1)) or horizontal_score == -(10 ** (brd.n-1)):
+                return horizontal_score
+            total_score += horizontal_score
 
-                # TODO ADD: Set variable to diagonal up heuristic function
-                diagonal_up = self.diagonalUpHeuristic(row, col, brd)
-                if diagonal_up == (10 ** (brd.n-1)) or diagonal_up == -(10 ** (brd.n-1)):
-                    return diagonal_up
-                total_score += diagonal_up
+            # TODO ADD: Set variable to diagonal up heuristic function
+            diagonal_up = self.diagonalUpHeuristic(row, col, brd)
+            if diagonal_up == (10 ** (brd.n-1)) or diagonal_up == -(10 ** (brd.n-1)):
+                return diagonal_up
+            total_score += diagonal_up
 
-                # TODO ADD: Set variable to diagonal down heuristic function
-                diagonal_down = self.diagonalDownHeuristic(row, col, brd)
-                if diagonal_down == (10 ** (brd.n-1)) or diagonal_down == -(10 ** (brd.n-1)):
-                    return diagonal_down
-                total_score += diagonal_down
+            # TODO ADD: Set variable to diagonal down heuristic function
+            diagonal_down = self.diagonalDownHeuristic(row, col, brd)
+            if diagonal_down == (10 ** (brd.n-1)) or diagonal_down == -(10 ** (brd.n-1)):
+                return diagonal_down
+            total_score += diagonal_down
         return total_score
 
     # Find the board state that returns the lowest value
