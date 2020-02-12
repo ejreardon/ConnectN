@@ -68,6 +68,40 @@ class AlphaBetaAgent(agent.Agent):
                     max_state_value = curr_value
         return max_state_value
 
+    # Heuristic function to return an evaluation of the board state
+    #
+    # PARAM [board.Board] brd: the current board state
+    # RETURN [int]: board state value
+    #
+    def heuristic(self, brd):
+        total_score = 0
+        for row in range(len(brd.w)):
+            for col in range(len(brd.h)):
+                # TODO ADD: Set variable to vertical heuristic function
+                vertical_score = VerticalHeuristic(row, col, brd)
+                if vertical_score == 1000 or vertical_score == -1000:
+                    return vertical_score
+                total_score += vertical_score
+
+                # TODO ADD: Set variable to horizontal heuristic function
+                horizontal_score = HorizontalHeuristic(row, col, brd)
+                if horizontal_score == 1000 or horizontal_score == -1000:
+                    return horizontal_score
+                total_score += horizontal_score
+
+                # TODO ADD: Set variable to diagonal up heuristic function
+                diagonal_up = DiagonalUpHeuristic(row, col, brd)
+                if diagonal_up == 1000 or diagonal_up == -1000:
+                    return diagonal_up
+                total_score += diagonal_up
+
+                # TODO ADD: Set variable to diagonal down heuristic function
+                diagonal_down = DiagonalDownHeuristic(row, col, brd)
+                if diagonal_down == 1000 or diagonal_down == -1000:
+                    return diagonal_down
+                total_score += diagonal_down;
+        return total_score;
+
     # Find the board state that returns the lowest value
     #
     # PARAM [list of board.Board]: The list of successive board states
