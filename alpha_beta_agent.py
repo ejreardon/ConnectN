@@ -159,7 +159,7 @@ class AlphaBetaAgent(agent.Agent):
         # get an array a of available moves for each column
         moves = self.validMoves(brd)
         # iterate through every column
-        for col in range(len(brd.w)):
+        for col in range(brd.w):
             row = moves[col]
             # if the row is full, proceed to next column
             if row == -1:
