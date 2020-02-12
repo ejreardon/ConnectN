@@ -16,7 +16,35 @@ class AlphaBetaAgent(agent.Agent):
         super().__init__(name)
         # Max search depth
         self.max_depth = max_depth
-
+        
+    # Return the height of the columns, if a column is full, set to -1
+    #
+    # PARAM [board.Board]: the column of the cell to be checked
+    # RETURN [int[]]: the heights of all columns in the board
+    def validMoves(brd):
+        # Initialize possible moves array with width of board
+        moves = [None] * brd.w
+        
+        # For each column, check if full, if not find valid move spot
+        for i in range(brd.w):
+            
+            # If the column is full, set to no possible move
+            if(brd[i][0] != 0):
+                moves[i] = -1
+            
+            # If the column is not full, return the height of the first open space
+            else:
+                for j in range(brd.h):
+                    # If it is at the bottom, only check if the space is empty, not if the space below is full
+                    if(brd[i][j] == 0 && j == brd.h - 1):
+                        moves[i] = j
+                    # Otherwise check if the current space is empty and the space below is full
+                    elif(brd[i][j] == 0 && brd[i][j + 1] != 0):
+                        moves[i] = j
+        # Return the array of possible moves
+        return moves
+                
+        
     # Pick a column.
     #
     # PARAM [board.Board] brd: the current board state
@@ -42,7 +70,7 @@ class AlphaBetaAgent(agent.Agent):
                 max_found = min_found
         # Once all values are found, find max_found in the dict and get the tuple to return the move needed to be made
         return (values_dict[max_found])[0]
-
+    
     # Find the board state that returns the highest value
     #
     # PARAM [list of board.Board]: The list of successive board states
