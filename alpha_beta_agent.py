@@ -21,7 +21,7 @@ class AlphaBetaAgent(agent.Agent):
     #
     # PARAM [board.Board]: the column of the cell to be checked
     # RETURN [int[]]: the heights of all columns in the board
-    def validMoves(brd):
+    def valid_moves(self, brd):
         # Initialize possible moves array with width of board
         moves = [None] * brd.w
         
@@ -29,17 +29,17 @@ class AlphaBetaAgent(agent.Agent):
         for i in range(brd.w):
             
             # If the column is full, set to no possible move
-            if(brd[i][0] != 0):
+            if brd[i][0] != 0:
                 moves[i] = -1
             
             # If the column is not full, return the height of the first open space
             else:
                 for j in range(brd.h):
                     # If it is at the bottom, only check if the space is empty, not if the space below is full
-                    if(brd[i][j] == 0 && j == brd.h - 1):
+                    if brd[i][j] == 0 and j == brd.h - 1:
                         moves[i] = j
                     # Otherwise check if the current space is empty and the space below is full
-                    elif(brd[i][j] == 0 && brd[i][j + 1] != 0):
+                    elif brd[i][j] == 0 and brd[i][j + 1] != 0:
                         moves[i] = j
         # Return the array of possible moves
         return moves
