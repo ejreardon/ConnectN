@@ -57,7 +57,7 @@ class AlphaBetaAgent(agent.Agent):
         if curr_depth == self.max_depth:
             max_state_value = float("-inf")
             for state in states:
-                curr_value = heuristic(self, state)
+                curr_value = self.heuristic(self, state)
                 if curr_value > max_state_value:
                     max_state_value = curr_value
         else:
@@ -130,25 +130,25 @@ class AlphaBetaAgent(agent.Agent):
         for col in range(len(brd.w)):
             for row in range(len(brd.h)):
                 # TODO ADD: Set variable to vertical heuristic function
-                vertical_score = verticalHeuristic(row, col, brd)
+                vertical_score = self.verticalHeuristic(row, col, brd)
                 if vertical_score == (10 ** (brd.n-1)) or vertical_score == -(10 ** (brd.n-1)):
                     return vertical_score
                 total_score += vertical_score
 
                 # TODO ADD: Set variable to horizontal heuristic function
-                horizontal_score = horizontalHeuristic(row, col, brd)
+                horizontal_score = self.horizontalHeuristic(row, col, brd)
                 if horizontal_score == (10 ** (brd.n-1)) or horizontal_score == -(10 ** (brd.n-1)):
                     return horizontal_score
                 total_score += horizontal_score
 
                 # TODO ADD: Set variable to diagonal up heuristic function
-                diagonal_up = diagonalUpHeuristic(row, col, brd)
+                diagonal_up = self.diagonalUpHeuristic(row, col, brd)
                 if diagonal_up == (10 ** (brd.n-1)) or diagonal_up == -(10 ** (brd.n-1)):
                     return diagonal_up
                 total_score += diagonal_up
 
                 # TODO ADD: Set variable to diagonal down heuristic function
-                diagonal_down = diagonalDownHeuristic(row, col, brd)
+                diagonal_down = self.diagonalDownHeuristic(row, col, brd)
                 if diagonal_down == (10 ** (brd.n-1)) or diagonal_down == -(10 ** (brd.n-1)):
                     return diagonal_down
                 total_score += diagonal_down
@@ -168,7 +168,7 @@ class AlphaBetaAgent(agent.Agent):
         if curr_depth == self.max_depth:
             min_state_value = float("inf")
             for state in states:
-                curr_value = heuristic(self, state)
+                curr_value = self.heuristic(self, state)
                 if curr_value < min_state_value:
                     min_state_value = curr_value
         else:
