@@ -161,6 +161,9 @@ class AlphaBetaAgent(agent.Agent):
         # iterate through every column
         for col in range(len(brd.w)):
             row = moves[col]
+            # if the row is full, proceed to next column
+            if row == -1:
+                continue
             # TODO ADD: Set variable to vertical heuristic function
             vertical_score = self.verticalHeuristic(row, col, brd)
             if vertical_score == (10 ** (brd.n-1)) or vertical_score == -(10 ** (brd.n-1)):
