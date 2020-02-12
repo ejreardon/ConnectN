@@ -99,8 +99,8 @@ class AlphaBetaAgent(agent.Agent):
                 diagonal_down = DiagonalDownHeuristic(row, col, brd)
                 if diagonal_down == (10 ** (brd.n-1)) or diagonal_down == -(10 ** (brd.n-1)):
                     return diagonal_down
-                total_score += diagonal_down;
-        return total_score;
+                total_score += diagonal_down
+        return total_score
 
     # Find the board state that returns the lowest value
     #
