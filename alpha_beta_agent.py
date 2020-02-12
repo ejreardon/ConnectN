@@ -75,32 +75,82 @@ class AlphaBetaAgent(agent.Agent):
     #
     def heuristic(self, brd):
         total_score = 0
-        for row in range(len(brd.w)):
-            for col in range(len(brd.h)):
+        for col in range(len(brd.w)):
+            for row in range(len(brd.h)):
                 # TODO ADD: Set variable to vertical heuristic function
-                vertical_score = VerticalHeuristic(row, col, brd)
+                vertical_score = verticalHeuristic(row, col, brd)
                 if vertical_score == (10 ** (brd.n-1)) or vertical_score == -(10 ** (brd.n-1)):
                     return vertical_score
                 total_score += vertical_score
 
                 # TODO ADD: Set variable to horizontal heuristic function
-                horizontal_score = HorizontalHeuristic(row, col, brd)
+                horizontal_score = horizontalHeuristic(row, col, brd)
                 if horizontal_score == (10 ** (brd.n-1)) or horizontal_score == -(10 ** (brd.n-1)):
                     return horizontal_score
                 total_score += horizontal_score
 
                 # TODO ADD: Set variable to diagonal up heuristic function
-                diagonal_up = DiagonalUpHeuristic(row, col, brd)
+                diagonal_up = diagonalUpHeuristic(row, col, brd)
                 if diagonal_up == (10 ** (brd.n-1)) or diagonal_up == -(10 ** (brd.n-1)):
                     return diagonal_up
                 total_score += diagonal_up
 
                 # TODO ADD: Set variable to diagonal down heuristic function
-                diagonal_down = DiagonalDownHeuristic(row, col, brd)
+                diagonal_down = diagonalDownHeuristic(row, col, brd)
                 if diagonal_down == (10 ** (brd.n-1)) or diagonal_down == -(10 ** (brd.n-1)):
                     return diagonal_down
                 total_score += diagonal_down
         return total_score
+
+    # Find heuristic value based on vertical arrangement of tokens
+    #
+    # PARAM [int]: The y value (row) of the token
+    # PARAM [int]: The x value (column) of the token
+    # PARAM [board.Board] brd: the current board state
+    # RETURN [int]: Evaluation of vertical arrangement
+    #
+    def verticalHeuristic(self, row, col, brd):
+        # boolean to tell whether a chain of tokens is broken
+        is_broken = False
+        # boolean to tell if it the first value to be checked
+        first = True
+        # variable for the first token to start the chain
+        current_token = -1
+        # variables for the player and opponent tokens
+        plyr = 0
+        opp = 0
+
+        # iterate over the next brd.n spaces in the same column to get evaluation,
+        # starting from the bottom
+        for i in range(brd.n):  # ex: (0, 1, 2, 3)
+            # make sure that the token location is valid (less than the board height)
+            if (row + (brd.n - 1) - i) <= brd.h:
+                # store the value of the next token
+                value = brd[row + (brd.n - 1) - i][col]
+                # if it is the first, store it as the current_token
+                if first:
+                    current_token = value
+                    first = False
+                # if the current_token isn't the same as the value, then it is broken
+                if current_token != value:
+                    is_broken = True
+                # else, the chain is broken, so reset each player and the current_token
+                if is_broken:
+                    plyr = 0
+                    opp = 0
+                    is_broken = False
+                    current_token = value
+                # increment the player and opponent variables based on value
+                if value == 1:
+                    plyr += 1
+                elif value == 2:
+                    opp += 1
+        # return the greater value to the power of 10 ex: (1, 10, 100, 1000)
+        if plyr > opp:
+            return (10 ** plyr)/10
+        # return the negative if opponent
+        else:
+            return -(10 ** opp)/10
 
     # Find the board state that returns the lowest value
     #
