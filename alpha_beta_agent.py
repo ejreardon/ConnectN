@@ -55,9 +55,11 @@ class AlphaBetaAgent(agent.Agent):
         # TODO: Figure out what to do
         # Check to see if the current depth is the maximum depth
         if curr_depth == self.max_depth:
-            # TODO ADD: Perform heuristics on the states and return the max
-            print("Reached max depth")
-            max_state_value = 100000
+            max_state_value = float("-inf")
+            for state in states:
+                curr_value = heuristic(self, state)
+                if curr_value > max_state_value:
+                    max_state_value = curr_value
         else:
             # Init max state value to negative infinity
             max_state_value = float("-inf")
@@ -164,9 +166,11 @@ class AlphaBetaAgent(agent.Agent):
         # TODO: Figure out what to do
         # Check to see if the current depth is the maximum depth
         if curr_depth == self.max_depth:
-            # TODO ADD: Perform heuristics on the states and return the max
-            print("Reached max depth")
-            min_state_value = 100000
+            min_state_value = float("inf")
+            for state in states:
+                curr_value = heuristic(self, state)
+                if curr_value < min_state_value:
+                    min_state_value = curr_value
         else:
             # Init min state value to positive infinity
             min_state_value = float("inf")
