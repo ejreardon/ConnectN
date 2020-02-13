@@ -164,11 +164,11 @@ class AlphaBetaAgent(agent.Agent):
                         return (10 ** curr_score) / 10
                     # Return negative value for board opponent
                     else:
-                        return (10 ** curr_score) / 10 * -1
+                        return (10 ** curr_score) / 10 * -2
                 # If the token is the other player's
                 else:
                     if curr_token == 1:
-                        return (10 ** curr_score) / 10 * -1
+                        return (10 ** curr_score) / 10 * -2
                     # Return negative value for board opponent
                     else:
                         return 0
@@ -217,11 +217,11 @@ class AlphaBetaAgent(agent.Agent):
                             return (10 ** curr_score) / 10
                         # Return negative value for board opponent
                         else:
-                            return (10 ** curr_score) / 10 * -1
+                            return (10 ** curr_score) / 10 * -2
                     # If the token is the other player's
                     else:
                         if curr_token == 1:
-                            return (10 ** curr_score) / 10 * -1
+                            return (10 ** curr_score) / 10 * -2
                         # Return negative value for board opponent
                         else:
                             return 0
@@ -234,7 +234,7 @@ class AlphaBetaAgent(agent.Agent):
                     return (10 ** curr_score) / 10
                 # Return negative value for board opponent
                 else:
-                    return (10 ** curr_score) / 10 * -1
+                    return (10 ** curr_score) / 10 * -2
         # Else, if the space contains a token
         else:
             # Check if the space to the left is the same token
@@ -265,7 +265,7 @@ class AlphaBetaAgent(agent.Agent):
                             return (10 ** curr_score) / 10
                         # Return negative value for board opponent
                         else:
-                            return (10 ** curr_score) / 10 * -1
+                            return (10 ** curr_score) / 10 * -2
                     # If there is nothing underneath
                     else:
                         # Return 0
@@ -273,7 +273,7 @@ class AlphaBetaAgent(agent.Agent):
                 # If the token is the other player's
                 else:
                     if curr_token == 1:
-                        return (10 ** curr_score) / 10 * -1
+                        return (10 ** curr_score) / 10 * -2
                     # Return negative value for board opponent
                     else:
                         return 0
@@ -337,7 +337,7 @@ class AlphaBetaAgent(agent.Agent):
                     return (10 ** curr_score) / 10
                 # Return negative value for board opponent
                 else:
-                    return (10 ** curr_score) / 10 * -1
+                    return (10 ** curr_score) / 10 * -2
         # Else, if the space contains a token
         else:
             # Check if the space to the left is the same token
@@ -371,7 +371,7 @@ class AlphaBetaAgent(agent.Agent):
                             return (10 ** curr_score) / 10
                         # Return negative value for board opponent
                         else:
-                            return (10 ** curr_score) / 10 * -1
+                            return (10 ** curr_score) / 10 * -2
                     # If there is nothing underneath
                     else:
                         # Return 0
@@ -379,7 +379,7 @@ class AlphaBetaAgent(agent.Agent):
                 # If the token is the other player's
                 else:
                     if curr_token == 1:
-                        return (10 ** curr_score) / 10 * -1
+                        return (10 ** curr_score) / 10 * -2
                     # Return negative value for board opponent
                     else:
                         return 0
@@ -431,7 +431,7 @@ class AlphaBetaAgent(agent.Agent):
                             return (10 ** curr_score) / 10
                         # Return negative value for board opponent
                         else:
-                            return (10 ** curr_score) / 10 * -1
+                            return (10 ** curr_score) / 10 * -2
                     # If the token is the other player's
                     else:
                         # Return 0
@@ -477,7 +477,7 @@ class AlphaBetaAgent(agent.Agent):
                             return (10 ** curr_score) / 10
                         # Return negative value for board opponent
                         else:
-                            return (10 ** curr_score) / 10 * -1
+                            return (10 ** curr_score) / 10 * -2
                     # If there is nothing underneath
                     else:
                         # Return 0
