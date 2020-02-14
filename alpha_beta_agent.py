@@ -43,8 +43,10 @@ class AlphaBetaAgent(agent.Agent):
                         moves[i] = j
         # Return the array of possible moves
         return moves
-                
-        
+
+    player_token = 0
+    opp_token = 0
+
     # Pick a column.
     #
     # PARAM [board.Board] brd: the current board state
@@ -52,6 +54,7 @@ class AlphaBetaAgent(agent.Agent):
     #
     # NOTE: make sure the column is legal, or you'll lose the game.
     def go(self, brd):
+        self.get_player(brd)
         """Search for the best move (choice of column for the token)"""
         # Use get-successors to find the set of successive board states for the next move
         next_move_list = self.get_successors(brd)
@@ -156,7 +159,7 @@ class AlphaBetaAgent(agent.Agent):
                 elif new_token == 0:
                     # Return the calculated score (1 for 1, 10 for 2, 100 for 3, etc.)
                     # Return positive value for board player
-                    if curr_token == 2:
+                    if curr_token == self.player_token:
                         if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
                             return 100000000000
                         return (10 ** curr_score) / 10
@@ -167,7 +170,7 @@ class AlphaBetaAgent(agent.Agent):
                         return (10 ** curr_score) / 10 * -2
                 # If the token is the other player's
                 else:
-                    if curr_token == 1:
+                    if curr_token == self.opp_token:
                         if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
                             return -10000000000000
                         return (10 ** curr_score) / 10 * -2
@@ -215,7 +218,7 @@ class AlphaBetaAgent(agent.Agent):
                     elif new_token == 0:
                         # Return the calculated score (1 for 1, 10 for 2, 100 for 3, etc.)
                         # Return positive value for board player
-                        if curr_token == 2:
+                        if curr_token == self.player_token:
                             if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
                                 return 100000000000
                             return (10 ** curr_score) / 10
@@ -226,7 +229,7 @@ class AlphaBetaAgent(agent.Agent):
                             return (10 ** curr_score) / 10 * -2
                     # If the token is the other player's
                     else:
-                        if curr_token == 1:
+                        if curr_token == self.opp_token:
                             if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
                                 return -10000000000000
                             return (10 ** curr_score) / 10 * -2
@@ -238,7 +241,7 @@ class AlphaBetaAgent(agent.Agent):
                         # return 0
                 # Return the calculated score (1 for 1, 10 for 2, 100 for 3, etc.)
                 # Return positive value for board player
-                if curr_token == 2:
+                if curr_token == self.player_token:
                     if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
                         return 100000000000
                     return (10 ** curr_score) / 10
@@ -273,7 +276,7 @@ class AlphaBetaAgent(agent.Agent):
                     if row == 0 or brd.board[row - 1][new_col] != 0:
                         # Return the calculated score (1 for 1, 10 for 2, 100 for 3, etc.)
                         # Return positive value for board player
-                        if curr_token == 2:
+                        if curr_token == self.player_token:
                             if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
                                 return 100000000000
                             return (10 ** curr_score) / 10
@@ -288,8 +291,8 @@ class AlphaBetaAgent(agent.Agent):
                         return 0
                 # If the token is the other player's
                 else:
-                    if curr_token == 1:
-                        return (10 ** curr_score)  / 10 * -2
+                    if curr_token == self.opp_token:
+                        return (10 ** curr_score) / 10 * -2
                     # Return negative value for board opponent
                     else:
                         return 0
@@ -337,7 +340,7 @@ class AlphaBetaAgent(agent.Agent):
                     elif new_token == 0:
                         # Return the calculated score (1 for 1, 10 for 2, 100 for 3, etc.)
                         # Return positive value for board player
-                        if curr_token == 2:
+                        if curr_token == self.player_token:
                             if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
                                 return 100000000000
                             return (10 ** curr_score) / 10
@@ -351,7 +354,7 @@ class AlphaBetaAgent(agent.Agent):
                         return 0
                 # Return the calculated score (1 for 1, 10 for 2, 100 for 3, etc.)
                 # Return positive value for board player
-                if curr_token == 2:
+                if curr_token == self.player_token:
                     if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
                         return 100000000000
                     return (10 ** curr_score) / 10
@@ -389,7 +392,7 @@ class AlphaBetaAgent(agent.Agent):
                     if row == 0 or brd.board[new_row - 1][new_col] != 0:
                         # Return the calculated score (1 for 1, 10 for 2, 100 for 3, etc.)
                         # Return positive value for board player
-                        if curr_token == 2:
+                        if curr_token == self.player_token:
                             if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
                                 return 100000000000
                             return (10 ** curr_score) / 10
@@ -404,7 +407,7 @@ class AlphaBetaAgent(agent.Agent):
                         return 0
                 # If the token is the other player's
                 else:
-                    if curr_token == 1:
+                    if curr_token == self.opp_token:
                         if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
                             return -10000000000000
                         return (10 ** curr_score) / 10 * -2
@@ -455,7 +458,7 @@ class AlphaBetaAgent(agent.Agent):
                     elif new_token == 0:
                         # Return the calculated score (1 for 1, 10 for 2, 100 for 3, etc.)
                         # Return positive value for board player
-                        if curr_token == 2:
+                        if curr_token == self.player_token:
                             if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
                                 return 100000000000
                             return (10 ** curr_score) / 10
@@ -470,7 +473,7 @@ class AlphaBetaAgent(agent.Agent):
                         return 0
                 # Return the calculated score (1 for 1, 10 for 2, 100 for 3, etc.)
                 # Return positive value for board player
-                if curr_token == 2:
+                if curr_token == self.player_token:
                     if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
                         return 100000000000
                     return (10 ** curr_score) / 10
@@ -507,7 +510,7 @@ class AlphaBetaAgent(agent.Agent):
                     if row == 0 or brd.board[new_row - 1][new_col] != 0:
                         # Return the calculated score (1 for 1, 10 for 2, 100 for 3, etc.)
                         # Return positive value for board player
-                        if curr_token == 2:
+                        if curr_token == self.player_token:
                             if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
                                 return 100000000000
                             return (10 ** curr_score) / 10
@@ -584,6 +587,20 @@ class AlphaBetaAgent(agent.Agent):
             # Add board to list of successors
             succ.append((nb,col))
         return succ
+
+    # function to get whether abs is player 1 or player 2 based on initial board state
+    def get_player(self, brd):
+        # variable to tell which player, True if Player 1
+        playerOne = True
+        for w_pos in range(brd.w):
+            if brd.board[0][w_pos] != 0:
+                playerOne = False
+        if playerOne:
+            self.player_token = 1
+            self.opp_token = 2
+        else:
+            self.player_token = 2
+            self.opp_token = 1
 
 
 THE_AGENT = AlphaBetaAgent("Group01", 4)
