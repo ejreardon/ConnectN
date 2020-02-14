@@ -192,7 +192,7 @@ class AlphaBetaAgent(agent.Agent):
         # Check if the current space is empty
         if curr_token == 0:
             # Check if the right-adjacent space is a token
-            if col < brd.w and brd.board[row][col + 1] != 0:
+            if col < (brd.w-1) and brd.board[row][col + 1] != 0:
                 # Reset the current token to the new token value
                 curr_token = brd.board[row][col + 1]
                 # Keep track of the score to return
@@ -297,7 +297,7 @@ class AlphaBetaAgent(agent.Agent):
         # Check if the current space is empty
         if curr_token == 0:
             # Check if the diagonal up space is a token
-            if col < brd.w and row < brd.h and brd.board[row + 1][col + 1] != 0:
+            if col < (brd.w-1) and row < brd.h and brd.board[row + 1][col + 1] != 0:
                 # Reset the current token to the new token value
                 curr_token = brd.board[row + 1][col + 1]
                 # Keep track of the score to return
@@ -403,7 +403,7 @@ class AlphaBetaAgent(agent.Agent):
         # Check if the current space is empty
         if curr_token == 0:
             # Check if the diagonal down space is a token
-            if col < brd.w and row >= 0 and brd.board[row - 1][col + 1] != 0:
+            if col < (brd.w-1) and row >= 0 and brd.board[row - 1][col + 1] != 0:
                 # Reset the current token to the new token value
                 curr_token = brd.board[row - 1][col + 1]
                 # Keep track of the score to return
@@ -502,7 +502,7 @@ class AlphaBetaAgent(agent.Agent):
         tokens_in_row = False
         # Iterate through the board starting from the bottom left (assuming height decrements) -- WRONG CHECK
         for h_pos in range(0, brd.h - 1):
-            for w_pos in range(0, brd.w - 1):
+            for w_pos in range(brd.w):
                 # Check if space is a token (CAN PROBABLY OPTIMIZE)
                 if (brd.board[h_pos][w_pos] == 1) or (brd.board[h_pos][w_pos] == 2):
                     tokens_in_row = True
