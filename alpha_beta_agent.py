@@ -55,6 +55,7 @@ class AlphaBetaAgent(agent.Agent):
     # NOTE: make sure the column is legal, or you'll lose the game.
     def go(self, brd):
         self.get_player(brd)
+        print(self.player_token)
         """Search for the best move (choice of column for the token)"""
         # Use get-successors to find the set of successive board states for the next move
         next_move_list = self.get_successors(brd)
@@ -592,9 +593,16 @@ class AlphaBetaAgent(agent.Agent):
     def get_player(self, brd):
         # variable to tell which player, True if Player 1
         playerOne = True
+        newGameCount = 0
         for w_pos in range(brd.w):
             if brd.board[0][w_pos] != 0:
+                newGameCount += 1
                 playerOne = False
+
+        if newGameCount > 1:
+            print("returned")
+            return
+
         if playerOne:
             self.player_token = 1
             self.opp_token = 2
