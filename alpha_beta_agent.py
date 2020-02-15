@@ -43,8 +43,10 @@ class AlphaBetaAgent(agent.Agent):
                         moves[i] = j
         # Return the array of possible moves
         return moves
-                
-        
+
+    player_token = 0
+    opp_token = 0
+
     # Pick a column.
     #
     # PARAM [board.Board] brd: the current board state
@@ -52,6 +54,8 @@ class AlphaBetaAgent(agent.Agent):
     #
     # NOTE: make sure the column is legal, or you'll lose the game.
     def go(self, brd):
+        self.get_player(brd)
+        print(self.player_token)
         """Search for the best move (choice of column for the token)"""
         # Use get-successors to find the set of successive board states for the next move
         next_move_list = self.get_successors(brd)
@@ -69,7 +73,8 @@ class AlphaBetaAgent(agent.Agent):
             if min_found > max_found:
                 max_found = min_found
         # Once all values are found, find max_found in the dict and get the tuple to return the move needed to be made
-        return (values_dict[max_found])[0]
+        print(max_found)
+        return (values_dict[max_found])[1]
     
     # Find the board state that returns the highest value
     #
@@ -79,13 +84,11 @@ class AlphaBetaAgent(agent.Agent):
     # RETURN [int]: Maximum value found
     #
     def find_max(self, states, max_val, curr_depth):
-        # Check to see if no states are returned
-        # TODO: Figure out what to do
         # Check to see if the current depth is the maximum depth
         if curr_depth == self.max_depth:
             max_state_value = float("-inf")
             for state in states:
-                curr_value = self.heuristic(self, state)
+                curr_value = self.heuristic(state[0])
                 if curr_value > max_state_value:
                     max_state_value = curr_value
         else:
@@ -93,101 +96,10 @@ class AlphaBetaAgent(agent.Agent):
             max_state_value = float("-inf")
             # Iterate through the successive states and find the min for each, increment the depth
             for state in states:
-                curr_value = self.find_min(state, max_val, curr_depth + 1)
+                curr_value = self.find_min(self.get_successors(state[0]), max_val, curr_depth + 1)
                 if curr_value > max_state_value:
                     max_state_value = curr_value
         return max_state_value
-
-    # Find heuristic value based on vertical arrangement of tokens
-    #
-    # PARAM [int]: The y value (row) of the token
-    # PARAM [int]: The x value (column) of the token
-    # PARAM [board.Board] brd: the current board state
-    # RETURN [int]: Evaluation of vertical arrangement
-    #
-    def verticalHeuristic(self, row, col, brd):
-        # boolean to tell whether a chain of tokens is broken
-        is_broken = False
-        # boolean to tell if it the first value to be checked
-        first = True
-        # variable for the first token to start the chain
-        current_token = -1
-        # variables for the player and opponent tokens
-        plyr = 0
-        opp = 0
-
-        # iterate over the next brd.n spaces in the same column to get evaluation,
-        # starting from the bottom
-        for i in range(brd.n):  # ex: (0, 1, 2, 3)
-            # make sure that the token location is valid (less than the board height)
-            if (row + (brd.n - 1) - i) <= brd.h:
-                # store the value of the next token
-                value = brd[row + (brd.n - 1) - i][col]
-                # if it is the first, store it as the current_token
-                if first:
-                    current_token = value
-                    first = False
-                # if the current_token isn't the same as the value, then it is broken
-                if current_token != value:
-                    is_broken = True
-                # else, the chain is broken, so reset each player and the current_token
-                if is_broken:
-                    plyr = 0
-                    opp = 0
-                    is_broken = False
-                    current_token = value
-                # increment the player and opponent variables based on value
-                if value == 1:
-                    plyr += 1
-                elif value == 2:
-                    opp += 1
-        # return the greater value to the power of 10 ex: (1, 10, 100, 1000)
-        if plyr > opp:
-            return (10 ** plyr)/10
-        # return the negative if opponent
-        else:
-            return -(10 ** opp)/10
-
-    # Heuristic function to return an evaluation of the board state
-    #
-    # PARAM [board.Board] brd: the current board state
-    # RETURN [int]: board state value
-    #
-    def heuristic(self, brd):
-        # variable to hold score return value
-        total_score = 0
-        # get an array a of available moves for each column
-        moves = self.validMoves(brd)
-        # iterate through every column
-        for col in range(brd.w):
-            row = moves[col]
-            # if the row is full, proceed to next column
-            if row == -1:
-                continue
-            # TODO ADD: Set variable to vertical heuristic function
-            vertical_score = self.verticalHeuristic(row, col, brd)
-            if vertical_score == (10 ** (brd.n-1)) or vertical_score == -(10 ** (brd.n-1)):
-                return vertical_score
-            total_score += vertical_score
-
-            # TODO ADD: Set variable to horizontal heuristic function
-            horizontal_score = self.horizontalHeuristic(row, col, brd)
-            if horizontal_score == (10 ** (brd.n-1)) or horizontal_score == -(10 ** (brd.n-1)):
-                return horizontal_score
-            total_score += horizontal_score
-
-            # TODO ADD: Set variable to diagonal up heuristic function
-            diagonal_up = self.diagonalUpHeuristic(row, col, brd)
-            if diagonal_up == (10 ** (brd.n-1)) or diagonal_up == -(10 ** (brd.n-1)):
-                return diagonal_up
-            total_score += diagonal_up
-
-            # TODO ADD: Set variable to diagonal down heuristic function
-            diagonal_down = self.diagonalDownHeuristic(row, col, brd)
-            if diagonal_down == (10 ** (brd.n-1)) or diagonal_down == -(10 ** (brd.n-1)):
-                return diagonal_down
-            total_score += diagonal_down
-        return total_score
 
     # Find the board state that returns the lowest value
     #
@@ -197,13 +109,11 @@ class AlphaBetaAgent(agent.Agent):
     # RETURN [int]: Minimum value found
     #
     def find_min(self, states, max_val, curr_depth):
-        # Check to see if no states are returned
-        # TODO: Figure out what to do
         # Check to see if the current depth is the maximum depth
         if curr_depth == self.max_depth:
             min_state_value = float("inf")
             for state in states:
-                curr_value = self.heuristic(self, state)
+                curr_value = self.heuristic(state[0])
                 if curr_value < min_state_value:
                     min_state_value = curr_value
         else:
@@ -211,11 +121,448 @@ class AlphaBetaAgent(agent.Agent):
             min_state_value = float("inf")
             # Iterate through the successive states and find the max for each, increment the depth
             for state in states:
-                curr_value = self.find_max(state, max_val, curr_depth + 1)
+                curr_value = self.find_max(self.get_successors(state[0]), max_val, curr_depth + 1)
                 if curr_value < min_state_value:
                     min_state_value = curr_value
         return min_state_value
 
+    # Find heuristic value based on vertical arrangement of tokens
+    #
+    # PARAM [int]: The y value (row) of the token
+    # PARAM [int]: The x value (column) of the token
+    # PARAM [board.Board] brd: the current board state
+    # RETURN [int]: Evaluation of vertical arrangement
+    #
+    def vertical_heuristic(self, row, col, brd):
+        # Select the space with the current coordinates
+        curr_token = brd.board[row][col]
+        # Check if the current space is empty
+        if curr_token != 0:
+            # Check if the space below is the same token
+            if col > 0 and brd.board[row - 1][col] == curr_token:
+                # If so, the current space has already been accounted for, return 0
+                return 0
+            # Keep track of the score to return
+            curr_score = 0
+            # Variable for space iterating
+            new_row = row + 1
+            # Iterate upwards until board edge is hit
+            while new_row < brd.h:
+                # Get whatever is in the new space
+                new_token = brd.board[new_row][col]
+                # If the newly found token is the same as the one we're on
+                if new_token == curr_token:
+                    # Add a multiple of 10 to the current score
+                    curr_score += 1
+                    # Iterate to next space
+                    new_row += 1
+                # If the space is empty
+                elif new_token == 0:
+                    # Return the calculated score (1 for 1, 10 for 2, 100 for 3, etc.)
+                    # Return positive value for board player
+                    if curr_token == self.player_token:
+                        if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
+                            return 100000000000
+                        return (10 ** curr_score) / 10
+                    # Return negative value for board opponent
+                    else:
+                        if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
+                            return -10000000000000
+                        return (10 ** curr_score) / 10 * -2
+                # If the token is the other player's
+                else:
+                    if curr_token == self.opp_token:
+                        if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
+                            return -10000000000000
+                        return (10 ** curr_score) / 10 * -2
+                    # Return negative value for board opponent
+                    else:
+                        return 0
+                        #return (10 ** curr_score) / 10
+                    # # Return 0
+                    # return 0
+            # If board edge is hit, return 0
+            return 0
+        return 0
+
+    # Find heuristic value based on horizontal arrangement of tokens
+    #
+    # PARAM [int]: The y value (row) of the token
+    # PARAM [int]: The x value (column) of the token
+    # PARAM [board.Board] brd: the current board state
+    # RETURN [int]: Evaluation of horizontal arrangement
+    #
+    def horizontal_heuristic(self, row, col, brd):
+        # Select the space with the current coordinates
+        curr_token = brd.board[row][col]
+        # Check if the current space is empty
+        if curr_token == 0:
+            # Check if the right-adjacent space is a token
+            if col < (brd.w-1) and brd.board[row][col + 1] != 0:
+                # Reset the current token to the new token value
+                curr_token = brd.board[row][col + 1]
+                # Keep track of the score to return
+                curr_score = 0
+                # Variable for space iterating
+                new_col = col + 1
+                # Iterate to the right until board edge is hit
+                while new_col < brd.w:
+                    # Get whatever is in the new space
+                    new_token = brd.board[row][new_col]
+                    # If the newly found token is the same as the one we're on
+                    if new_token == curr_token:
+                        # Add a multiple of 10 to the current score
+                        curr_score += 1
+                        # Iterate to next space
+                        new_col += 1
+                    # If the space is empty
+                    elif new_token == 0:
+                        # Return the calculated score (1 for 1, 10 for 2, 100 for 3, etc.)
+                        # Return positive value for board player
+                        if curr_token == self.player_token:
+                            if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
+                                return 100000000000
+                            return (10 ** curr_score) / 10
+                        # Return negative value for board opponent
+                        else:
+                            if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
+                                return -10000000000000
+                            return (10 ** curr_score) / 10 * -2
+                    # If the token is the other player's
+                    else:
+                        if curr_token == self.opp_token:
+                            if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
+                                return -10000000000000
+                            return (10 ** curr_score) / 10 * -2
+                        # Return negative value for board opponent
+                        else:
+                            return 0
+                            #return (10 ** curr_score) / 10
+                        # # Return 0
+                        # return 0
+                # Return the calculated score (1 for 1, 10 for 2, 100 for 3, etc.)
+                # Return positive value for board player
+                if curr_token == self.player_token:
+                    if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
+                        return 100000000000
+                    return (10 ** curr_score) / 10
+                # Return negative value for board opponent
+                else:
+                    if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
+                        return -10000000000000
+                    return (10 ** curr_score) * -2
+        # Else, if the space contains a token
+        else:
+            # Check if the space to the left is the same token
+            if col > 0 and brd.board[row][col - 1] == curr_token:
+                # If so, the current space has already been accounted for, return 0
+                return 0
+            # Keep track of the score to return
+            curr_score = 0
+            # Variable for space iterating
+            new_col = col + 1
+            # Iterate to the right until board edge is hit
+            while new_col < brd.w:
+                # Get whatever is in the new space
+                new_token = brd.board[row][new_col]
+                # If the newly found token is the same as the one we're on
+                if new_token == curr_token:
+                    # Add a multiple of 10 to the current score
+                    curr_score += 1
+                    # Iterate to next space
+                    new_col += 1
+                # If the space is empty
+                elif new_token == 0:
+                    # Check if you are at bottom row or if there is a token below (gravity)
+                    if row == 0 or brd.board[row - 1][new_col] != 0:
+                        # Return the calculated score (1 for 1, 10 for 2, 100 for 3, etc.)
+                        # Return positive value for board player
+                        if curr_token == self.player_token:
+                            if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
+                                return 100000000000
+                            return (10 ** curr_score) / 10
+                        # Return negative value for board opponent
+                        else:
+                            if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
+                                return -10000000000000
+                            return (10 ** curr_score) / 10 * -2
+                    # If there is nothing underneath
+                    else:
+                        # Return 0
+                        return 0
+                # If the token is the other player's
+                else:
+                    if curr_token == self.opp_token:
+                        return (10 ** curr_score) / 10 * -2
+                    # Return negative value for board opponent
+                    else:
+                        return 0
+                        #return (10 ** curr_score) / 10
+                    # # Return 0
+                    # return 0
+            # If board edge is hit, return 0
+            return 0
+        return 0
+
+    # Find heuristic value based on diagonal up arrangement of tokens
+    #
+    # PARAM [int]: The y value (row) of the token
+    # PARAM [int]: The x value (column) of the token
+    # PARAM [board.Board] brd: the current board state
+    # RETURN [int]: Evaluation of diagonal up arrangement
+    #
+    def d_up_heuristic(self, row, col, brd):
+        # Select the space with the current coordinates
+        curr_token = brd.board[row][col]
+        # Check if the current space is empty
+        if curr_token == 0:
+            # Check if the diagonal up space is a token
+            if col < (brd.w-1) and row < brd.h and brd.board[row + 1][col + 1] != 0:
+                # Reset the current token to the new token value
+                curr_token = brd.board[row + 1][col + 1]
+                # Keep track of the score to return
+                curr_score = 0
+                # Variable for col space iterating
+                new_col = col + 1
+                # Variable for row space iterating
+                new_row = row + 1
+                # Iterate diagonally up until board edge is hit
+                while new_col < brd.w and new_row < brd.h:
+                    # Get whatever is in the new space
+                    new_token = brd.board[new_row][new_col]
+                    # If the newly found token is the same as the one we're on
+                    if new_token == curr_token:
+                        # Add a multiple of 10 to the current score
+                        curr_score += 1
+                        # Iterate to next space
+                        new_col += 1
+                        new_row += 1
+                    # If the space is empty
+                    elif new_token == 0:
+                        # Return the calculated score (1 for 1, 10 for 2, 100 for 3, etc.)
+                        # Return positive value for board player
+                        if curr_token == self.player_token:
+                            if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
+                                return 100000000000
+                            return (10 ** curr_score) / 10
+                        # Return negative value for board opponent
+                        else:
+                            return 0
+                            #return (10 ** curr_score) / 10 * -1
+                    # If the token is the other player's
+                    else:
+                        # Return 0
+                        return 0
+                # Return the calculated score (1 for 1, 10 for 2, 100 for 3, etc.)
+                # Return positive value for board player
+                if curr_token == self.player_token:
+                    if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
+                        return 100000000000
+                    return (10 ** curr_score) / 10
+                # Return negative value for board opponent
+                else:
+                    if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
+                        return -10000000000000
+                    return (10 ** curr_score) / 10 * -2
+        # Else, if the space contains a token
+        else:
+            # Check if the space to the left is the same token
+            if col > 0 and row > 0 and brd.board[row - 1][col - 1] == curr_token:
+                # If so, the current space has already been accounted for, return 0
+                return 0
+            # Keep track of the score to return
+            curr_score = 0
+            # Variable for col space iterating
+            new_col = col + 1
+            # Variable for row space iterating
+            new_row = row + 1
+            # Iterate to the right until board edge is hit
+            while new_col < brd.w and new_row < brd.h:
+                # Get whatever is in the new space
+                new_token = brd.board[new_row][new_col]
+                # If the newly found token is the same as the one we're on
+                if new_token == curr_token:
+                    # Add a multiple of 10 to the current score
+                    curr_score += 1
+                    # Iterate to next space
+                    new_col += 1
+                    new_row += 1
+                # If the space is empty
+                elif new_token == 0:
+                    # Check if you are at bottom row or if there is a token below (gravity)
+                    if row == 0 or brd.board[new_row - 1][new_col] != 0:
+                        # Return the calculated score (1 for 1, 10 for 2, 100 for 3, etc.)
+                        # Return positive value for board player
+                        if curr_token == self.player_token:
+                            if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
+                                return 100000000000
+                            return (10 ** curr_score) / 10
+                        # Return negative value for board opponent
+                        else:
+                            if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
+                                return -10000000000000
+                            return (10 ** curr_score) / 10 * -2
+                    # If there is nothing underneath
+                    else:
+                        # Return 0
+                        return 0
+                # If the token is the other player's
+                else:
+                    if curr_token == self.opp_token:
+                        if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
+                            return -10000000000000
+                        return (10 ** curr_score) / 10 * -2
+                    # Return negative value for board opponent
+                    else:
+                        return 0
+                        #return (10 ** curr_score) / 10
+                    # # Return 0
+                    # return 0
+            # If board edge is hit, return 0
+            return 0
+        return 0
+
+    # Find heuristic value based on diagonal down arrangement of tokens
+    #
+    # PARAM [int]: The y value (row) of the token
+    # PARAM [int]: The x value (column) of the token
+    # PARAM [board.Board] brd: the current board state
+    # RETURN [int]: Evaluation of diagonal down arrangement
+    #
+    def d_down_heuristic(self, row, col, brd):
+        # Select the space with the current coordinates
+        curr_token = brd.board[row][col]
+        # Check if the current space is empty
+        if curr_token == 0:
+            # Check if the diagonal down space is a token
+            if col < (brd.w-1) and row >= 0 and brd.board[row - 1][col + 1] != 0:
+                # Reset the current token to the new token value
+                curr_token = brd.board[row - 1][col + 1]
+                # Keep track of the score to return
+                curr_score = 0
+                # Variable for col space iterating
+                new_col = col + 1
+                # Variable for row space iterating
+                new_row = row - 1
+                # Iterate diagonally up until board edge is hit
+                while new_col < brd.w and new_row >= 0:
+                    # Get whatever is in the new space
+                    new_token = brd.board[new_row][new_col]
+                    # If the newly found token is the same as the one we're on
+                    if new_token == curr_token:
+                        # Add a multiple of 10 to the current score
+                        curr_score += 1
+                        # Iterate to next space
+                        new_col += 1
+                        new_row -= 1
+                    # If the space is empty
+                    elif new_token == 0:
+                        # Return the calculated score (1 for 1, 10 for 2, 100 for 3, etc.)
+                        # Return positive value for board player
+                        if curr_token == self.player_token:
+                            if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
+                                return 100000000000
+                            return (10 ** curr_score) / 10
+                        # Return negative value for board opponent
+                        else:
+                            if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
+                                return -10000000000000
+                            return (10 ** curr_score) / 10 * -2
+                    # If the token is the other player's
+                    else:
+                        # Return 0
+                        return 0
+                # Return the calculated score (1 for 1, 10 for 2, 100 for 3, etc.)
+                # Return positive value for board player
+                if curr_token == self.player_token:
+                    if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
+                        return 100000000000
+                    return (10 ** curr_score) / 10
+                # Return negative value for board opponent
+                else:
+                    return 0
+                    #return (10 ** curr_score) / 10 * -1
+        # Else, if the space contains a token
+        else:
+            # Check if the space to the left is the same token
+            if col > 0 and row < brd.h - 1 and brd.board[row + 1][col - 1] == curr_token:
+                # If so, the current space has already been accounted for, return 0
+                return 0
+            # Keep track of the score to return
+            curr_score = 0
+            # Variable for col space iterating
+            new_col = col + 1
+            # Variable for row space iterating
+            new_row = row - 1
+            # Iterate to the right until board edge is hit
+            while new_col < brd.w and new_row >= 0:
+                # Get whatever is in the new space
+                new_token = brd.board[new_row][new_col]
+                # If the newly found token is the same as the one we're on
+                if new_token == curr_token:
+                    # Add a multiple of 10 to the current score
+                    curr_score += 1
+                    # Iterate to next space
+                    new_col += 1
+                    new_row -= 1
+                # If the space is empty
+                elif new_token == 0:
+                    # Check if you are at bottom row or if there is a token below (gravity)
+                    if row == 0 or brd.board[new_row - 1][new_col] != 0:
+                        # Return the calculated score (1 for 1, 10 for 2, 100 for 3, etc.)
+                        # Return positive value for board player
+                        if curr_token == self.player_token:
+                            if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
+                                return 100000000000
+                            return (10 ** curr_score) / 10
+                        # Return negative value for board opponent
+                        else:
+                            if (10 ** curr_score) / 10 == (10 ** (brd.n - 1)):
+                                return -10000000000000
+                            return (10 ** curr_score) / 10 * -2
+                    # If there is nothing underneath
+                    else:
+                        # Return 0
+                        return 0
+                # If the token is the other player's
+                else:
+                    # Return 0
+                    return 0
+            # If board edge is hit, return 0
+            return 0
+        return 0
+
+    # Heuristic function to return an evaluation of the board state
+    #
+    # PARAM [board.Board] brd: the current board state
+    # RETURN [int]: board state value
+    #
+    def heuristic(self, brd):
+        # Variable to hold score return value
+        total_score = 0
+        # Variable to see check if the row contains tokens
+        tokens_in_row = False
+        # Iterate through the board starting from the bottom left (assuming height decrements) -- WRONG CHECK
+        for h_pos in range(0, brd.h - 1):
+            for w_pos in range(brd.w):
+                # Check if space is a token (CAN PROBABLY OPTIMIZE)
+                if (brd.board[h_pos][w_pos] == 1) or (brd.board[h_pos][w_pos] == 2):
+                    tokens_in_row = True
+                # Add result of vertical heuristic check to the total score
+                total_score += self.vertical_heuristic(h_pos, w_pos, brd)
+                # Add result of horizontal heuristic check to the total score
+                total_score += self.horizontal_heuristic(h_pos, w_pos, brd)
+                # Add result of diagonal up heuristic check to the total score
+                total_score += self.d_up_heuristic(h_pos, w_pos, brd)
+                # Add result of diagonal down heuristic check to the total score
+                total_score += self.d_down_heuristic(h_pos, w_pos, brd)
+            # When width iteration ends, check if there are no tokens in row
+            if not tokens_in_row:
+                break
+            # Set check back to false to check next row
+            tokens_in_row = False
+        # Return the sum of all the scores found
+        return total_score
 
     # Get the successors of the given board.
     #
@@ -241,3 +588,27 @@ class AlphaBetaAgent(agent.Agent):
             # Add board to list of successors
             succ.append((nb,col))
         return succ
+
+    # function to get whether abs is player 1 or player 2 based on initial board state
+    def get_player(self, brd):
+        # variable to tell which player, True if Player 1
+        playerOne = True
+        newGameCount = 0
+        for w_pos in range(brd.w):
+            if brd.board[0][w_pos] != 0:
+                newGameCount += 1
+                playerOne = False
+
+        if newGameCount > 1:
+            print("returned")
+            return
+
+        if playerOne:
+            self.player_token = 1
+            self.opp_token = 2
+        else:
+            self.player_token = 2
+            self.opp_token = 1
+
+
+THE_AGENT = AlphaBetaAgent("Group01", 4)
